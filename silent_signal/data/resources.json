@@ -1,0 +1,31 @@
+{
+  "national_hotline": "National Domestic Violence Hotline: 1-800-799-7233",
+  "crisis_text": "Crisis Text Line: Text HOME to 741741",
+  "national_suicide_prevention": "National Suicide Prevention Lifeline: 988",
+  "rape_crisis": "RAINN National Sexual Assault Hotline: 1-800-656-4673",
+  "childhelp": "Childhelp National Child Abuse Hotline: 1-800-4-A-CHILD",
+  "elder_abuse": "Elder Abuse Hotline: 1-800-252-8966",
+  "mental_health": "National Mental Health Hotline: 1-800-950-6264",
+  "safety_planning": {
+    "title": "Safety Planning Resources",
+    "description": "Important safety planning information",
+    "resources": [
+      "Create a safety plan with trusted contacts",
+      "Keep important documents in a safe place",
+      "Identify safe places to go in an emergency",
+      "Consider getting a protective order",
+      "Document any abuse or threats"
+    ]
+  },
+  "counseling": {
+    "title": "Professional Counseling Services",
+    "description": "Mental health and relationship counseling",
+    "resources": [
+      "Individual therapy for emotional support",
+      "Couples counseling for relationship issues",
+      "Group therapy for survivors of abuse",
+      "Trauma-informed therapy services"
+    ]
+  }
+}
+

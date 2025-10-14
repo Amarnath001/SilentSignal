@@ -1,0 +1,42 @@
+{
+  "gaslighting": {
+    "patterns": [
+      "that never happened",
+      "you're imagining things",
+      "you're making that up",
+      "that's not what i said",
+      "you're remembering it wrong",
+      "you're crazy",
+      "you're delusional",
+      "that's all in your head",
+      "you're confused",
+      "you're misremembering"
+    ],
+    "severity": "high",
+    "description": "Reality denial and manipulation tactics"
+  },
+  "guilt_tripping": {
+    "patterns": [
+      "if you really cared",
+      "if you loved me",
+      "you don't care about",
+      "you're being selfish",
+      "after all i've done",
+      "you owe me"
+    ],
+    "severity": "medium",
+    "description": "Emotional manipulation through guilt"
+  },
+  "threats": {
+    "patterns": [
+      "i'll hurt myself",
+      "i'll kill myself",
+      "you'll regret this",
+      "i'll make you pay",
+      "you'll be sorry"
+    ],
+    "severity": "critical",
+    "description": "Direct threats and intimidation"
+  }
+}
+

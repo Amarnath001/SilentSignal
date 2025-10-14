@@ -1,31 +1,38 @@
-# SilentSignal Requirements
+# SilentSignal Production Requirements
+# Core dependencies for production-quality deployment
 
-# Core dependencies
-streamlit==1.38.0
-fastapi==0.115.0
-uvicorn[standard]==0.30.6
+# Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# Frontend
+streamlit>=1.28.0
+
+# AI/ML
+openai>=1.3.0
+requests>=2.31.0
+
+# Data Processing
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
 python-multipart>=0.0.6
-requests==2.32.3
-regex==2024.7.24
-python-dotenv==1.0.1
-reportlab==4.2.2
-nltk==3.9.1
-spacy==3.7.5
-pytest==8.3.2
-mypy==1.11.2
-openai>=1.50.0
 
-# Additional utilities
-pandas>=2.0.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# Configuration
+python-dotenv>=1.0.0
 
-# Development tools
+# HTTP Client
+httpx>=0.25.0
+
+# Logging and Monitoring
+structlog>=23.2.0
+
+# Development and Testing (optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
 black>=23.0.0
 flake8>=6.0.0
-isort>=5.12.0
+mypy>=1.7.0
 
-# Note: NVIDIA NIM SDK should be installed separately
-# Follow NVIDIA's documentation for NIM installation
+# Production (optional)
+gunicorn>=21.2.0
+redis>=5.0.0
