@@ -22,21 +22,54 @@
       "you don't care about",
       "you're being selfish",
       "after all i've done",
-      "you owe me"
+      "you owe me",
+      "don't think you care",
+      "prove your love",
+      "don't love me",
+      "care about me"
     ],
     "severity": "medium",
     "description": "Emotional manipulation through guilt"
   },
   "threats": {
     "patterns": [
-      "i'll hurt myself",
-      "i'll kill myself",
-      "you'll regret this",
-      "i'll make you pay",
-      "you'll be sorry"
+      "hurt yourself",
+      "kill yourself",
+      "slap yourself",
+      "cut yourself",
+      "harm yourself",
+      "you'll regret",
+      "i'll make you pay"
     ],
     "severity": "critical",
     "description": "Direct threats and intimidation"
+  },
+  "emotional_manipulation": {
+    "patterns": [
+      "don't think you care",
+      "you don't love me",
+      "you never loved me",
+      "you don't care about me",
+      "you're abandoning me",
+      "you don't want me",
+      "don't think you like me"
+    ],
+    "severity": "high",
+    "description": "Manipulative statements designed to create emotional dependency"
+  },
+  "self_harm_coercion": {
+    "patterns": [
+      "prove your love",
+      "prove you care",
+      "show me you love me",
+      "slap yourself",
+      "hurt yourself",
+      "cut yourself",
+      "harm yourself",
+      "punish yourself"
+    ],
+    "severity": "critical",
+    "description": "Coercing someone to harm themselves as proof of love or commitment"
   }
 }
 

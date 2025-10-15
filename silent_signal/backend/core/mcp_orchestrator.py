@@ -280,8 +280,8 @@ class MCPOrchestrator:
             pattern_score = pattern_results.get("score", 0.0)
             ai_confidence = nemotron_results.get("confidence", 0.0)
             
-            # Weighted fusion
-            fusion_score = (pattern_score * 0.6) + (ai_confidence * 100 * 0.4)
+            # Weighted fusion - AI is primary detection engine
+            fusion_score = (ai_confidence * 100 * 0.7) + (pattern_score * 0.3)
             
             # Determine final risk level
             pattern_risk = pattern_results.get("risk_level", "safe")
@@ -294,19 +294,20 @@ class MCPOrchestrator:
             return {
                 "fusion_score": fusion_score,
                 "final_risk_level": final_risk_level,
-                "pattern_contribution": pattern_score * 0.6,
-                "ai_contribution": ai_confidence * 100 * 0.4,
-                "confidence": (ai_confidence + 0.5) / 2  # Normalized confidence
+                "pattern_contribution": pattern_score * 0.5,
+                "ai_contribution": ai_confidence * 100 * 0.5,
+                "confidence": (ai_confidence + 0.5) / 2,  # Normalized confidence
+                "patterns": pattern_results.get("patterns", [])  # Pass through detected patterns
             }
             
-        except Exception as e:
-            logger.error(f"Fusion analysis error: {e}")
-            return {
-                "error": str(e),
-                "fusion_score": 0.0,
-                "final_risk_level": "unknown",
-                "confidence": 0.0
-            }
+        except Exception as e:s
+        logger.error(f"Fusion analysis error: {e}")
+        return {
+            "error": str(e),
+            "fusion_score": 0.0,
+            "final_risk_level": "unknown",
+            "confidence": 0.0
+        }
     
     def _generate_final_report(self, fusion_results: Dict[str, Any], 
                               rag_context: Dict[str, Any]) -> AnalysisResponse:
@@ -317,6 +318,31 @@ class MCPOrchestrator:
             risk_score = fusion_results.get("fusion_score", 0.0)
             patterns = fusion_results.get("patterns", [])
             
+            # Extract AI red flags from Nemotron analysis
+            nemotron_results = {}
+            for step in self.steps:
+                if step.name == "nemotron_analysis" and step.result:
+                    nemotron_results = step.result
+                    break
+            
+            ai_red_flags = nemotron_results.get("ai_analysis", {}).get("red_flags", [])
+            
+            # Convert AI red flags to PatternInfo objects
+            ai_patterns = []
+            for flag in ai_red_flags:
+                if isinstance(flag, dict):
+                    from ..models.schemas import PatternInfo
+                    ai_patterns.append(PatternInfo(
+                        name=flag.get("type", "unknown"),
+                        severity=flag.get("severity", "medium"),
+                        description=flag.get("description", ""),
+                        confidence=0.8,  # High confidence for AI-detected patterns
+                        evidence=flag.get("evidence", "")
+                    ))
+            
+            # Use AI patterns if available, otherwise fall back to rule-based patterns
+            final_patterns = ai_patterns if ai_patterns else patterns
+            
             # Convert risk level to enum
             try:
                 risk_level_enum = RiskLevel(risk_level)
@@ -324,22 +350,30 @@ class MCPOrchestrator:
                 risk_level_enum = RiskLevel.SAFE
             
             # Generate suggestions and resources
-            suggestions = self._generate_suggestions(risk_level, patterns)
-            resources = self._get_relevant_resources(risk_level, patterns)
+            suggestions = self._generate_suggestions(risk_level, final_patterns)
+            resources = self._get_relevant_resources(risk_level, final_patterns)
             
-            # Build analysis details
+            # Build analysis details (avoiding circular references)
             analysis_details = {
-                "workflow_steps": [step.__dict__ for step in self.steps],
+                "workflow_steps": [
+                    {
+                        "name": step.name,
+                        "status": step.status,
+                        "start_time": step.start_time,
+                        "end_time": step.end_time,
+                        "duration": (step.end_time - step.start_time) if step.start_time and step.end_time else None
+                    } for step in self.steps
+                ],
                 "fusion_details": fusion_results,
                 "rag_context": rag_context,
-                "processing_metrics": self.metrics
+                "processing_metrics": self.metrics.copy()
             }
             
             return AnalysisResponse(
                 risk_level=risk_level_enum,
                 risk_score=min(risk_score / 100.0, 1.0),  # Normalize to 0-1
-                patterns_detected=patterns,
-                red_flags_count=len(patterns),
+                patterns_detected=final_patterns,
+                red_flags_count=len(final_patterns),
                 suggestions=suggestions,
                 resources=resources,
                 analysis_details=analysis_details,
@@ -351,58 +385,85 @@ class MCPOrchestrator:
             return self._get_error_response(str(e))
     
     def _generate_suggestions(self, risk_level: str, patterns: List[PatternInfo]) -> List[str]:
-        """Generate contextual suggestions based on risk level and patterns."""
+        """Generate contextual suggestions based on detected patterns."""
         suggestions = []
         
-        if risk_level == "abuse":
-            suggestions.extend([
-                "Consider reaching out to a trusted friend or family member",
-                "Contact a domestic violence hotline for support",
-                "Document any concerning interactions",
-                "Consider your safety as the top priority"
-            ])
-        elif risk_level == "concerning":
-            suggestions.extend([
-                "Pay attention to how this conversation makes you feel",
-                "Consider setting boundaries in future interactions",
-                "Monitor the situation carefully",
-                "Trust your instincts about the relationship"
-            ])
-        else:
-            suggestions.extend([
-                "Continue to communicate openly and honestly",
-                "Maintain healthy boundaries in your relationship",
-                "Trust your instincts about what feels right"
-            ])
+        # Pattern-specific suggestions
+        pattern_suggestions = {
+            "gaslighting": [
+                "Trust your memory and feelings - you're not imagining things",
+                "Keep a record of conversations to maintain clarity",
+                "Seek support from someone who validates your experiences"
+            ],
+            "guilt_tripping": [
+                "Remember that you're not responsible for someone else's emotions",
+                "Set clear boundaries about what you can and cannot do",
+                "Practice saying 'no' without feeling guilty"
+            ],
+            "threats": [
+                "Take any threats seriously and prioritize your safety",
+                "Document all threatening communications",
+                "Contact local authorities if you feel unsafe"
+            ],
+            "emotional_manipulation": [
+                "Recognize that healthy relationships don't require you to prove your love",
+                "Don't let someone make you doubt your feelings or intentions",
+                "Consider talking to a counselor about relationship dynamics"
+            ],
+            "self_harm_coercion": [
+                "Never harm yourself to prove anything to someone else",
+                "This is a serious red flag - seek immediate support",
+                "Contact a crisis hotline if you're being pressured to hurt yourself"
+            ]
+        }
         
-        return suggestions
+        # Add pattern-specific suggestions
+        for pattern in patterns:
+            if pattern.name in pattern_suggestions:
+                suggestions.extend(pattern_suggestions[pattern.name])
+        
+        # Add risk-level specific suggestions
+        if risk_level == "abuse":
+            if not any("safety" in s.lower() for s in suggestions):
+                suggestions.insert(0, "Your safety is the most important priority right now")
+            if not any("hotline" in s.lower() for s in suggestions):
+                suggestions.append("Contact a domestic violence hotline for immediate support")
+        elif risk_level == "concerning":
+            suggestions.append("Trust your instincts - if something feels wrong, it probably is")
+            suggestions.append("Consider talking to a trusted friend or counselor about this relationship")
+        else:
+            suggestions.append("Continue to monitor communication patterns for any changes")
+            suggestions.append("Maintain healthy boundaries in your relationships")
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_suggestions = []
+        for suggestion in suggestions:
+            if suggestion not in seen:
+                seen.add(suggestion)
+                unique_suggestions.append(suggestion)
+        
+        return unique_suggestions[:6]  # Limit to 6 suggestions max
     
     def _get_relevant_resources(self, risk_level: str, patterns: List[PatternInfo]) -> List[str]:
         """Get relevant resources based on risk level and patterns."""
-        try:
-            resources = self.resource_manager.get_crisis_resources()
-            
-            if risk_level == "abuse":
-                return [
-                    resources.get("national_hotline", "National Domestic Violence Hotline: 1-800-799-7233"),
-                    resources.get("crisis_text", "Crisis Text Line: Text HOME to 741741"),
-                    resources.get("safety_planning", "Safety Planning Resources Available")
-                ]
-            elif risk_level == "concerning":
-                return [
-                    resources.get("counseling", "Consider professional counseling"),
-                    resources.get("support_groups", "Support groups available in your area"),
-                    "Relationship counseling resources"
-                ]
-            else:
-                return [
-                    "Healthy relationship resources",
-                    "Communication skills workshops"
-                ]
-                
-        except Exception as e:
-            logger.error(f"Resource retrieval error: {e}")
-            return ["Resources temporarily unavailable"]
+        if risk_level == "abuse":
+            return [
+                "National Domestic Violence Hotline: 1-800-799-7233",
+                "Crisis Text Line: Text HOME to 741741",
+                "Safety Planning Resources Available"
+            ]
+        elif risk_level == "concerning":
+            return [
+                "Consider professional counseling",
+                "Support groups available in your area",
+                "Relationship counseling resources"
+            ]
+        else:
+            return [
+                "Healthy relationship resources",
+                "Communication skills workshops"
+            ]
     
     def _get_error_response(self, error_message: str) -> AnalysisResponse:
         """Generate error response."""

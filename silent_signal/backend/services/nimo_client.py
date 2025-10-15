@@ -122,7 +122,7 @@ class NimoClient:
         context_str = "\n".join(context_info) if context_info else "No additional context available"
         
         prompt = f"""
-You are an expert psychologist specializing in emotional abuse detection. Analyze the following conversation for signs of manipulation, coercion, gaslighting, or other emotional abuse patterns.
+You are an expert psychologist specializing in emotional abuse detection in digital communication. You excel at understanding modern chat language, slang, abbreviations, and subtle manipulation tactics used in text messages and online conversations.
 
 CONTEXT INFORMATION:
 {context_str}
@@ -130,25 +130,40 @@ CONTEXT INFORMATION:
 CONVERSATION TO ANALYZE:
 {conversation}
 
-Please provide a detailed analysis in the following JSON format:
+IMPORTANT: Pay special attention to:
+- Chat slang and abbreviations (ur, urself, u, r, etc.)
+- Modern internet language and texting patterns
+- Subtle manipulation that might be disguised as casual conversation
+- Emotional coercion through guilt, threats, or pressure
+- Power dynamics and control attempts
+
+Analyze this conversation for emotional abuse patterns and provide your assessment in this JSON format:
 {{
     "risk_level": "safe|concerning|abuse",
     "confidence": 0.0-1.0,
-    "reasoning": "Detailed explanation of your analysis",
-    "key_indicators": ["list", "of", "specific", "indicators"],
+    "reasoning": "Detailed explanation of your analysis including specific language patterns detected",
+    "red_flags": [
+        {{
+            "type": "gaslighting|guilt_tripping|threats|emotional_manipulation|self_harm_coercion|isolation|control|intimidation",
+            "severity": "low|medium|high|critical",
+            "description": "What specific behavior or language was detected",
+            "explanation": "Why this is concerning and how it affects the recipient",
+            "evidence": "Specific words or phrases that triggered this flag"
+        }}
+    ],
     "emotional_impact": "Assessment of potential emotional harm",
     "recommendations": ["list", "of", "safety", "recommendations"]
 }}
 
-Focus on:
-1. Manipulation tactics (gaslighting, guilt-tripping, threats)
-2. Power dynamics and control attempts
-3. Emotional manipulation and coercion
-4. Isolation attempts
-5. Intimidation or threats
-6. Overall emotional safety of the conversation
+Focus on detecting:
+1. **Manipulation tactics**: gaslighting, guilt-tripping, emotional blackmail
+2. **Threats and coercion**: direct or implied threats, pressure tactics
+3. **Control attempts**: isolation, monitoring, dominance
+4. **Emotional manipulation**: making someone doubt themselves or feel responsible
+5. **Self-harm coercion**: pressuring someone to hurt themselves
+6. **Power dynamics**: unequal relationship patterns
 
-Be objective, evidence-based, and prioritize the safety and well-being of potential victims.
+Be thorough in understanding context, slang, and modern communication patterns. Prioritize the safety and well-being of potential victims.
 """
         
         return prompt.strip()
@@ -164,14 +179,15 @@ Be objective, evidence-based, and prioritize the safety and well-being of potent
                     {"role": "user", "content": prompt}
                 ],
                 "temperature": 0.1,
-                "max_tokens": 1000,
+                "max_tokens": 2000,
                 "timeout": self.timeout
             }
             
             # Add reasoning parameters if configured
             if self.reasoning_min > 0 or self.reasoning_max > 0:
-                request_params["reasoning_min_tokens"] = self.reasoning_min
-                request_params["reasoning_max_tokens"] = self.reasoning_max
+                # Note: reasoning tokens are not supported in standard OpenAI SDK
+                # These parameters are specific to Nemotron-3 and may need custom handling
+                pass
             
             # Make API call
             response = self.openai_client.chat.completions.create(**request_params)
@@ -206,13 +222,14 @@ Be objective, evidence-based, and prioritize the safety and well-being of potent
                     {"role": "user", "content": prompt}
                 ],
                 "temperature": 0.1,
-                "max_tokens": 1000
+                "max_tokens": 2000
             }
             
             # Add reasoning parameters if configured
             if self.reasoning_min > 0 or self.reasoning_max > 0:
-                payload["reasoning_min_tokens"] = self.reasoning_min
-                payload["reasoning_max_tokens"] = self.reasoning_max
+                # Note: reasoning tokens are not supported in standard OpenAI SDK
+                # These parameters are specific to Nemotron-3 and may need custom handling
+                pass
             
             response = requests.post(
                 f"{self.base_url}/chat/completions",

@@ -4,6 +4,16 @@ import { useTheme } from '../../contexts/ThemeContext';
 export const Header = () => {
   const { isDarkMode, toggleTheme } = useTheme();
 
+  const scrollToHero = () => {
+    const heroElement = document.getElementById('hero');
+    if (heroElement) {
+      heroElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If no hero ID, scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b shadow-lg ${
       isDarkMode ? 'bg-gray-900/95 border-gray-700' : 'bg-white/95 border-purple-100'
@@ -11,7 +21,7 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3 group cursor-pointer flex-shrink-0">
+          <div className="flex items-center space-x-3 group cursor-pointer flex-shrink-0" onClick={scrollToHero}>
             <div className="relative group-hover:scale-125 transition-transform duration-300">
               <Shield size={32} className="text-purple-600 group-hover:animate-pulse" />
               <div className="absolute inset-0 flex items-center justify-center">

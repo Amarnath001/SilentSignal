@@ -28,6 +28,7 @@ class PatternInfo(BaseModel):
     severity: str = Field(..., description="Pattern severity level")
     description: str = Field(..., description="Pattern description")
     confidence: float = Field(..., description="Confidence score (0-1)")
+    evidence: Optional[str] = Field(None, description="Specific words or phrases that triggered this pattern")
 
 
 class AnalysisResponse(BaseModel):

@@ -8,7 +8,7 @@ export const Hero = () => {
   const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
 
   return (
-    <section ref={elementRef} className={`py-20 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 ${isDarkMode ? 'dark:from-purple-600 dark:via-purple-700 dark:to-purple-900' : ''}`}>
+    <section ref={elementRef} id="hero" className={`py-20 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 ${isDarkMode ? 'dark:from-purple-600 dark:via-purple-700 dark:to-purple-900' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Content */}
