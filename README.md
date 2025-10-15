@@ -219,22 +219,42 @@ export { NewComponent } from './NewComponent';
 
 ## Deployment
 
-### Docker Deployment
+### Render (Current Production)
+
+The application is deployed on Render with two services:
+
+**Backend Service (Web Service)**
+- Type: Web Service (Python)
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `python3 main.py backend`
+- Root Directory: `.`
+- Environment: Python 3.13+
+
+**Frontend Service (Static Site)**
+- Type: Static Site
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+- Root Directory: `frontend-react`
+- Environment Variables:
+  - `VITE_API_URL`: URL of the backend service
+
+### Configuration
+
+See `render.yaml` for infrastructure-as-code deployment configuration.
+
+To deploy:
+1. Push changes to `main` branch on GitHub
+2. Render auto-deploys on commit (if enabled)
+3. Or manually trigger deploy from Render dashboard
+
+### Local Development
+
 ```bash
-# Build image
-make docker-build
+# Backend
+make run-backend
 
-# Run container
-make docker-run
-```
-
-### Production Deployment
-```bash
-# Build package
-make build
-
-# Deploy (configure your deployment)
-make deploy
+# Frontend
+cd frontend-react && npm run dev
 ```
 
 ## Key Components
