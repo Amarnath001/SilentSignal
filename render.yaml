@@ -5,7 +5,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: cd silent_signal/backend/api && python3 main.py backend
+    startCommand: make backend
     rootDir: .
 
   # Frontend Service  

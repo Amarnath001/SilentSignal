@@ -400,25 +400,13 @@ async def general_exception_handler(request: Request, exc: Exception):
 if __name__ == "__main__":
     import uvicorn
     import os
-    import sys
     
-    # Handle command line arguments
-    if len(sys.argv) > 1 and sys.argv[1] == "backend":
-        # Get port from environment (for deployment platforms like Render)
-        port = int(os.environ.get("PORT", settings.api_port))
-        host = "0.0.0.0"  # Use 0.0.0.0 for deployment
-        
-        uvicorn.run(
-            "main:app",
-            host=host,
-            port=port,
-            reload=False  # Disable reload in production
-        )
-    else:
-        # Development mode
-        uvicorn.run(
-            "main:app",
-            host="127.0.0.1",
-            port=settings.api_port,
-            reload=True
-        )
+    port = int(os.environ.get("PORT", settings.api_port))
+    host = "0.0.0.0"
+    
+    uvicorn.run(
+        "main:app",
+        host=host,
+        port=port,
+        reload=False
+    )

@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd silent_signal/backend/api && python3 main.py backend",
+    "startCommand": "make run-backend",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
