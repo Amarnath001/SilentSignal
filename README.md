@@ -199,13 +199,22 @@ async def new_endpoint(request: YourRequestModel):
 ```
 
 ### 3. **Adding New UI Components**
-```python
-# Create silent_signal/frontend/components/new_component.py
-def render_new_component():
-    # Component implementation
-    pass
+```tsx
+// Create frontend-react/src/components/NewComponent.tsx
+import { useTheme } from '../contexts/ThemeContext';
 
-# Import in silent_signal/frontend/components/__init__.py
+export const NewComponent = () => {
+  const { isDarkMode } = useTheme();
+  
+  return (
+    <div className={isDarkMode ? 'bg-gray-800' : 'bg-white'}>
+      {/* Component implementation */}
+    </div>
+  );
+};
+
+// Export in frontend-react/src/components/index.ts (if using barrel exports)
+export { NewComponent } from './NewComponent';
 ```
 
 ## Deployment
