@@ -12,12 +12,12 @@ import logging
 import time
 from typing import Dict, Any
 
-from ..core.mcp_orchestrator import MCPOrchestrator
-from ..models.schemas import (
+from silent_signal.backend.core.mcp_orchestrator import MCPOrchestrator
+from silent_signal.backend.models.schemas import (
     AnalysisRequest, AnalysisResponse, HealthResponse,
     WhatsAppWebhookRequest, EmailAlertRequest
 )
-from ...config.settings import settings
+from silent_signal.config.settings import settings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
