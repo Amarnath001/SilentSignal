@@ -1,56 +1,53 @@
-## 🏗️ New Architecture Overview
+## Architecture Overview
 
-SilentSignal has been completely refactored into a production-quality, modular architecture with clean separation of concerns:
+SilentSignal uses a production-ready, modular architecture with a clean separation of concerns:
 
 ```
 SilentSignal/
-├── 📁 silent_signal/              # Backend services
-│   ├── 📁 backend/                # Core backend logic
-│   │   ├── 📁 api/               # FastAPI endpoints
-│   │   ├── 📁 core/              # Business logic
-│   │   ├── 📁 services/          # External integrations
-│   │   ├── 📁 models/            # Data models
-│   │   └── 📁 utils/             # Utilities
-│   ├── 📁 config/                # Configuration
-│   └── 📁 data/                  # Data files
-├── 📁 frontend-react/             # React Frontend
-│   ├── 📁 src/                   # Source code
-│   │   ├── 📁 components/        # UI components
-│   │   ├── 📁 features/          # Feature modules
-│   │   ├── 📁 hooks/             # Custom hooks
-│   │   ├── 📁 lib/               # Utilities
-│   │   ├── 📁 services/          # API services
-│   │   ├── 📁 types/             # TypeScript types
-│   │   └── 📁 styles/            # Styling
-│   └── 📄 package.json           # Dependencies
-├── 📄 main.py                    # Entry point
-├── 📄 Makefile                   # Build automation
-└── 📄 requirements.txt           # Python dependencies
+├── silent_signal/               # Backend services
+│   ├── backend/                 # Core backend logic
+│   │   ├── api/                 # FastAPI endpoints
+│   │   ├── core/                # Business logic
+│   │   ├── services/            # External integrations
+│   │   ├── models/              # Data models
+│   │   └── utils/               # Utilities
+│   ├── config/                  # Configuration
+│   └── data/                    # Data files
+├── frontend-react/              # React frontend (Vite + TypeScript + Tailwind)
+│   ├── src/
+│   │   ├── components/          # UI components
+│   │   ├── hooks/               # Custom hooks
+│   │   ├── services/            # API services
+│   │   └── assets/              # Static assets
+│   └── package.json
+├── main.py                      # Entry point
+├── Makefile                     # Developer tasks
+└── requirements.txt             # Python dependencies
 ```
 
-## ✨ Key Improvements
+## Key Improvements
 
-### 🔧 **Production Quality**
+### Production Quality
 - **Modular Architecture**: Clean separation of frontend, backend, and business logic
 - **Type Safety**: Comprehensive Pydantic models and type hints
 - **Error Handling**: Robust error handling and logging throughout
 - **Configuration Management**: Centralized settings with environment variables
 - **API Documentation**: Auto-generated OpenAPI/Swagger docs
 
-### 🏛️ **Clean Architecture**
+### Clean Architecture
 - **Business Logic Separation**: Core logic isolated from API and UI
 - **Service Layer**: External integrations properly abstracted
 - **Data Models**: Consistent request/response validation
 - **Utility Functions**: Reusable components and helpers
 
-### 🚀 **Enhanced Features**
+### Enhanced Features
 - **Comprehensive API**: RESTful endpoints with proper status codes
-- **Modern UI**: Improved Streamlit interface with better UX
+- **Modern UI**: React/Vite frontend with TailwindCSS
 - **Metrics Dashboard**: System monitoring and analytics
 - **Resource Management**: Better crisis resource handling
 - **Health Checks**: Service monitoring and status endpoints
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. **Setup Environment**
 ```bash
@@ -79,31 +76,22 @@ make run-frontend
 make run-both
 ```
 
-#### Option B: Using Python
+#### Option B: Direct commands
 ```bash
-# Run backend
-python main.py backend
-
-# Run frontend
-python main.py frontend
-```
-
-#### Option C: Direct execution
-```bash
-# Backend
+# Backend (uvicorn)
 python -m uvicorn silent_signal.backend.api.main:app --reload --port 8000
 
-# Frontend
-streamlit run silent_signal/frontend/app.py --server.port 8501
+# Frontend (Vite)
+cd frontend-react && npm run dev
 ```
 
 ### 3. **Access Applications**
-- **Frontend**: http://localhost:8501
+- **Frontend**: http://localhost:5173 (Vite default) or your configured port
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 - **Health Check**: http://localhost:8000/health
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### Core Analysis
 - `POST /analyze` - Analyze conversation text
@@ -118,7 +106,7 @@ streamlit run silent_signal/frontend/app.py --server.port 8501
 - `POST /whatsapp/inbound` - WhatsApp webhook endpoint
 - `POST /alerts/email` - Email alert system
 
-## 🔧 Configuration
+## Configuration
 
 All configuration is centralized in `silent_signal/config/settings.py`:
 
@@ -138,7 +126,7 @@ API_HOST=0.0.0.0
 API_PORT=8000
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -152,7 +140,7 @@ make test-frontend
 pytest --cov=silent_signal --cov-report=html
 ```
 
-## 🔍 Code Quality
+## Code Quality
 
 ```bash
 # Linting
@@ -168,7 +156,7 @@ make check-imports
 make security-check
 ```
 
-## 📈 Monitoring & Health
+## Monitoring & Health
 
 ```bash
 # Check service health
@@ -181,7 +169,7 @@ make logs
 make monitor
 ```
 
-## 🏗️ Development Workflow
+## Development Workflow
 
 ### 1. **Adding New Features**
 ```bash
@@ -191,7 +179,7 @@ git checkout -b feature/new-feature
 # Make changes following the architecture:
 # - Backend logic → silent_signal/backend/core/
 # - API endpoints → silent_signal/backend/api/
-# - Frontend components → silent_signal/frontend/components/
+# - Frontend components → frontend-react/src/components/
 # - Data models → silent_signal/backend/models/
 
 # Test your changes
@@ -220,7 +208,7 @@ def render_new_component():
 # Import in silent_signal/frontend/components/__init__.py
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Docker Deployment
 ```bash
@@ -240,37 +228,36 @@ make build
 make deploy
 ```
 
-## 📚 Key Components
+## Key Components
 
-### 🧠 **MCP Orchestrator**
+### MCP Orchestrator
 - Manages the complete analysis workflow
 - Coordinates pattern detection and AI analysis
 - Provides comprehensive error handling and metrics
 
-### 🔍 **Pattern Detector**
+### Pattern Detector
 - Rule-based emotional abuse pattern detection
 - 240+ indicators across 10+ categories
 - Configurable severity levels and confidence scoring
 
-### 🤖 **NVIDIA NIM Client**
+### NVIDIA NIM Client
 - Production-ready AI integration
 - Robust error handling and fallback mechanisms
 - Comprehensive prompt engineering and response parsing
 
-### 🎨 **Modern Frontend**
-- Clean, responsive Streamlit interface
-- Real-time analysis with progress indicators
-- Safety features including disguise mode
-- Comprehensive example library
+### Modern Frontend (React)
+- Clean, accessible UI built with React, Vite and TailwindCSS
+- Real-time analysis and status indicators
+- Example prompts and educational resources
 
-## 🔒 Security & Privacy
+## Security & Privacy
 
 - **Zero Data Storage**: All processing in-memory only
 - **Local Processing**: No external data transmission
 - **Panic Button**: Quick disguise mode for privacy
 - **Secure Configuration**: Environment-based secrets management
 
-## 📞 Support & Resources
+## Support & Resources
 
 ### Crisis Resources
 - National Domestic Violence Hotline: 1-800-799-7233
@@ -282,7 +269,7 @@ make deploy
 - Health check: `make health`
 - Monitor resources: `make monitor`
 
-## 🎯 Migration from Old Structure
+## Migration from Old Structure
 
 If migrating from the old structure:
 
@@ -298,10 +285,10 @@ make run-backend
 make run-frontend
 ```
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-**SilentSignal** - Empowering individuals with AI-powered emotional abuse detection technology. 🛡️
+**SilentSignal** - AI-powered emotional abuse detection technology.
