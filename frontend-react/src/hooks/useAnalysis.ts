@@ -10,6 +10,7 @@ interface AnalysisResponse {
     severity: string;
     description: string;
     confidence: number;
+    evidence?: string;
   }>;
   red_flags_count: number;
   suggestions: string[];
