@@ -399,9 +399,15 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 if __name__ == "__main__":
     import uvicorn
+    import os
+    
+    # Get port from environment (for deployment platforms like Render)
+    port = int(os.environ.get("PORT", settings.api_port))
+    host = "0.0.0.0"  # Use 0.0.0.0 for deployment
+    
     uvicorn.run(
-        "silent_signal.backend.api.main:app",
-        host=settings.api_host,
-        port=settings.api_port,
-        reload=settings.api_reload
+        "main:app",
+        host=host,
+        port=port,
+        reload=False  # Disable reload in production
     )
