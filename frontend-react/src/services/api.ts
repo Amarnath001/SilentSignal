@@ -2,6 +2,9 @@
  * API service for communicating with the SilentSignal backend.
  */
 
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 // Types matching the backend schemas
 export interface AnalysisRequest {
   conversation: string;
@@ -37,7 +40,7 @@ class ApiService {
 
   constructor() {
     // Use environment variable or default to localhost:8000
-    this.baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    this.baseUrl = API_BASE_URL;
   }
 
   /**
