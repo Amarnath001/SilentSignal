@@ -1,5 +1,3 @@
-# 🛡️ SilentSignal - Production Quality Refactor
-
 ## 🏗️ New Architecture Overview
 
 SilentSignal has been completely refactored into a production-quality, modular architecture with clean separation of concerns:
