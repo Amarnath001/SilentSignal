@@ -12,12 +12,12 @@ import logging
 import time
 from typing import Dict, Any
 
-from silent_signal.backend.core.mcp_orchestrator import MCPOrchestrator
-from silent_signal.backend.models.schemas import (
+from ..core.mcp_orchestrator import MCPOrchestrator
+from ..models.schemas import (
     AnalysisRequest, AnalysisResponse, HealthResponse,
     WhatsAppWebhookRequest, EmailAlertRequest
 )
-from silent_signal.config.settings import settings
+from ...config.settings import settings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -400,14 +400,25 @@ async def general_exception_handler(request: Request, exc: Exception):
 if __name__ == "__main__":
     import uvicorn
     import os
+    import sys
     
-    # Get port from environment (for deployment platforms like Render)
-    port = int(os.environ.get("PORT", settings.api_port))
-    host = "0.0.0.0"  # Use 0.0.0.0 for deployment
-    
-    uvicorn.run(
-        "main:app",
-        host=host,
-        port=port,
-        reload=False  # Disable reload in production
-    )
+    # Handle command line arguments
+    if len(sys.argv) > 1 and sys.argv[1] == "backend":
+        # Get port from environment (for deployment platforms like Render)
+        port = int(os.environ.get("PORT", settings.api_port))
+        host = "0.0.0.0"  # Use 0.0.0.0 for deployment
+        
+        uvicorn.run(
+            "main:app",
+            host=host,
+            port=port,
+            reload=False  # Disable reload in production
+        )
+    else:
+        # Development mode
+        uvicorn.run(
+            "main:app",
+            host="127.0.0.1",
+            port=settings.api_port,
+            reload=True
+        )
