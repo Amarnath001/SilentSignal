@@ -20,5 +20,5 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: silent-signal-backend
+          name: SilentSignal
           property: url
