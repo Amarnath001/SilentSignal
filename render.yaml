@@ -1,0 +1,24 @@
+services:
+  # Backend Service
+  - type: web
+    name: silent-signal-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    rootDir: silent_signal/backend/api
+
+  # Frontend Service  
+  - type: web
+    name: silent-signal-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDir: frontend-react
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: silent-signal-backend
+          property: host

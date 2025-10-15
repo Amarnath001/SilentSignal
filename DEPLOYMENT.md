@@ -2,7 +2,7 @@
 
 ## 🚀 Quick Deployment Options
 
-### Option 1: Vercel (Frontend) + Railway (Backend) - Recommended
+### Option 1: Vercel (Frontend) + Render (Backend) - FREE - Recommended
 
 #### Frontend Deployment (Vercel):
 
@@ -20,25 +20,30 @@
    - **Name**: `VITE_API_URL`
    - **Value**: Your backend URL (from Railway deployment)
 
-#### Backend Deployment (Railway):
+#### Backend Deployment (Render - FREE):
 
-1. **Go to [railway.app](https://railway.app)**
-2. **Sign in with GitHub**
-3. **Click "New Project" → "Deploy from GitHub repo"**
-4. **Select your repository**
+1. **Go to [render.com](https://render.com)**
+2. **Sign up with GitHub**
+3. **Click "New +" → "Web Service"**
+4. **Connect your GitHub repository**
 5. **Configure service:**
+   - **Name**: `silent-signal-backend`
    - **Root Directory**: `silent_signal/backend/api`
+   - **Runtime**: `Python 3`
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. **Deploy!**
+   - **Plan**: `Free`
+6. **Click "Create Web Service"**
+7. **Wait for deployment (takes 5-10 minutes)**
+8. **Copy your backend URL** (e.g., `https://silent-signal-backend.onrender.com`)
 
 #### After Backend Deployment:
 
-1. **Copy your Railway backend URL** (e.g., `https://your-app.railway.app`)
+1. **Copy your Render backend URL** (e.g., `https://silent-signal-backend.onrender.com`)
 2. **Go back to Vercel frontend settings**
 3. **Add Environment Variable:**
    - **Name**: `VITE_API_URL`
-   - **Value**: `https://your-app.railway.app`
+   - **Value**: `https://silent-signal-backend.onrender.com`
 4. **Redeploy frontend**
 
 ---
@@ -70,7 +75,40 @@
 
 ---
 
-### Option 3: Full Stack on Railway
+### Option 3: Everything on Render (100% Free)
+
+#### Deploy Both Frontend and Backend on Render:
+
+1. **Go to [render.com](https://render.com)**
+2. **Sign up with GitHub**
+3. **Deploy Backend:**
+   - **New + → Web Service**
+   - **Connect GitHub repository**
+   - **Name**: `silent-signal-backend`
+   - **Root Directory**: `silent_signal/backend/api`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - **Plan**: `Free`
+
+4. **Deploy Frontend:**
+   - **New + → Static Site**
+   - **Connect GitHub repository**
+   - **Name**: `silent-signal-frontend`
+   - **Root Directory**: `frontend-react`
+   - **Build Command**: `npm install && npm run build`
+   - **Publish Directory**: `dist`
+   - **Plan**: `Free`
+
+5. **Configure Frontend Environment:**
+   - **Go to your frontend service settings**
+   - **Add Environment Variable:**
+     - **Name**: `VITE_API_URL`
+     - **Value**: Your backend URL (e.g., `https://silent-signal-backend.onrender.com`)
+
+---
+
+### Option 4: Railway (Has Free Tier)
 
 1. **Go to [railway.app](https://railway.app)**
 2. **Create two services:**
