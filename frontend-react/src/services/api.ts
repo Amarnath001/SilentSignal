@@ -16,6 +16,7 @@ export interface PatternInfo {
   severity: string;
   description: string;
   confidence: number;
+  evidence?: string;
 }
 
 export interface AnalysisResponse {
@@ -122,5 +123,4 @@ class ApiService {
 export const apiService = new ApiService();
 export default apiService;
 
-// Re-export types for convenience
-export type { AnalysisResponse, AnalysisRequest, PatternInfo, HealthResponse };
+// Note: Avoid re-exporting the same names to prevent TS2484 conflicts in some build setups

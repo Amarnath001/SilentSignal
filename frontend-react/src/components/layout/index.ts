@@ -1,4 +1,4 @@
-// Layout Components exports
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
+// Layout Components exports (named exports)
+export { Header } from './Header';
+export { Footer } from './Footer';
 

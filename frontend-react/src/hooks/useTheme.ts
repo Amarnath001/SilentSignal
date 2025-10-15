@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ThemeContextType } from '../types';
+
+type ThemeContextType = {
+  isDarkMode: boolean;
+  toggleTheme: () => void;
+  theme: 'dark' | 'light';
+};
 
 export const useTheme = (): ThemeContextType => {
   const [isDarkMode, setIsDarkMode] = useState(false);
